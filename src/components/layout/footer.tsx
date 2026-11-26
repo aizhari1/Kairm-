@@ -15,7 +15,7 @@ export function Footer({ locale, settings }: { locale: Locale; settings: Record<
     <footer className="has-bn rounded-t-[40px] border-t border-white/10 bg-surface">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="text-xl font-semibold">SIRAJ <span className="text-brand-light">سِراج</span></p>
+          <p className="text-xl font-semibold">KARAM <span className="text-brand-light">كرم</span></p>
           {about && <p className="mt-4 max-w-sm text-muted">{about}</p>}
         </div>
         <nav aria-label="Footer">
