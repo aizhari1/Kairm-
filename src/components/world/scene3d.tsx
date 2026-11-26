@@ -1,25 +1,20 @@
 "use client";
-import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import type { Mesh } from "three";
+import { Canvas, useThree } from "@react-three/fiber";
+import { ClapperBoard } from "./clapper";
 
-function Knot({ accent, speed }: { accent: string; speed: number }) {
-  const m = useRef<Mesh>(null);
-  useFrame((_, dt) => { if (m.current) { m.current.rotation.x += dt * 0.25 * speed; m.current.rotation.y += dt * 0.35 * speed; } });
-  return (
-    <mesh ref={m} scale={1.25}>
-      <torusKnotGeometry args={[1, 0.32, 160, 16]} />
-      <meshStandardMaterial color={accent} wireframe emissive={accent} emissiveIntensity={0.6} />
-    </mesh>
-  );
+function Board({ accent }: { accent: string }) {
+  const { viewport } = useThree();
+  const wide = viewport.width > viewport.height;
+  const scale = Math.min(1, (viewport.width * (wide ? 0.4 : 0.8)) / 4.4);
+  return <ClapperBoard accent={accent} second="#FF2BD6" auto scale={scale} position={[wide ? viewport.width * 0.22 : 0, wide ? 0 : viewport.height * 0.2, 0]} />;
 }
 
-export default function Scene3D({ accent, speed }: { accent: string; speed: number }) {
+/** "scene-3d" world: a neon clapperboard that claps by itself. */
+export default function Scene3D({ accent }: { accent: string; speed: number }) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: false, powerPreference: "low-power" }} style={{ position: "absolute", inset: 0 }}>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[4, 4, 4]} intensity={30} color={accent} />
-      <Knot accent={accent} speed={speed} />
+    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: true, powerPreference: "low-power" }} style={{ position: "absolute", inset: 0 }}>
+      <ambientLight intensity={0.8} />
+      <Board accent={accent} />
     </Canvas>
   );
 }
