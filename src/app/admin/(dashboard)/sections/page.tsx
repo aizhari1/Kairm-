@@ -28,7 +28,7 @@ export default async function SectionsPage() {
         <div className="mt-6 rounded-xl border border-dashed border-white/15 p-10 text-center">
           <p className="text-muted">No sections yet.</p>
           <form action={createStarterLayout} className="mt-4"><button className={btnPrimary}>Create the standard homepage layout</button></form>
-          <p className="mt-2 text-xs text-muted">Hero, Introduction, Services, Projects, Why SIRAJ, Process, Industries, Testimonials and CTA, all empty and ready to fill.</p>
+          <p className="mt-2 text-xs text-muted">Hero, Introduction, Services, Projects, Why KARAM, Process, Industries, Testimonials and CTA, all empty and ready to fill.</p>
         </div>
       ) : (
         <div className="mt-6"><SectionList initial={rows} /></div>
