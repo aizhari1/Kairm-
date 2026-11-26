@@ -28,7 +28,7 @@ function node(f: FieldSpec): z.ZodType {
     case "text": return str(2000);
     case "number": return z.coerce.number().min(f.min ?? 0).max(f.max ?? 1000).default(f.default ?? f.min ?? 0);
     case "bool": return z.boolean().default(f.default ?? false);
-    case "color": return z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a #RRGGBB color").default(f.default ?? "#8B5CF6");
+    case "color": return z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a #RRGGBB color").default(f.default ?? "#00F0FF");
     case "select": return z.enum(f.options.map((o) => o.value) as [string, ...string[]]).default(f.options[0].value);
     case "image": case "video": return str(600);
     case "media": return mediaRef();
