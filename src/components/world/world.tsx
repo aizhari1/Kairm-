@@ -14,7 +14,7 @@ export function World({ config, videoSrc }: { config: WorldConfig; videoSrc?: st
   const reduced = useReducedMotion();
   const lite = useLite();
   const [ref, inView] = useInView<HTMLDivElement>();
-  const accent = config.color_accent || "#8B5CF6";
+  const accent = config.color_accent || "#00F0FF";
   const k = Math.min(1, Math.max(0, config.intensity));
   const speed = SPEED[config.motion_preset] ?? 1;
   const live = inView && !reduced;
@@ -27,13 +27,13 @@ export function World({ config, videoSrc }: { config: WorldConfig; videoSrc?: st
       {t === "aurora" && (
         <>
           <span className="world-blob left-[-10%] top-[10%] size-[40vw] rounded-full" style={{ background: rgba(accent, 0.35 * k), animationPlayState: live ? "running" : "paused" }} />
-          <span className="world-blob right-[-10%] top-[40%] size-[35vw] rounded-full" style={{ background: rgba("#A78BFA", 0.28 * k), animationDelay: "-5s", animationPlayState: live ? "running" : "paused" }} />
+          <span className="world-blob right-[-10%] top-[40%] size-[35vw] rounded-full" style={{ background: rgba("#FF2BD6", 0.28 * k), animationDelay: "-5s", animationPlayState: live ? "running" : "paused" }} />
         </>
       )}
       {t === "morph" && (
         <>
-          <span className="world-morph left-[8%] top-[15%] size-[34vw]" style={{ background: `linear-gradient(135deg, ${rgba(accent, 0.45 * k)}, ${rgba("#A78BFA", 0.15)})`, animationPlayState: live ? "running" : "paused" }} />
-          <span className="world-morph bottom-[5%] right-[6%] size-[26vw]" style={{ background: `linear-gradient(200deg, ${rgba("#A78BFA", 0.35 * k)}, transparent)`, animationDelay: "-6s", animationPlayState: live ? "running" : "paused" }} />
+          <span className="world-morph left-[8%] top-[15%] size-[34vw]" style={{ background: `linear-gradient(135deg, ${rgba(accent, 0.45 * k)}, ${rgba("#FF2BD6", 0.15)})`, animationPlayState: live ? "running" : "paused" }} />
+          <span className="world-morph bottom-[5%] right-[6%] size-[26vw]" style={{ background: `linear-gradient(200deg, ${rgba("#FF2BD6", 0.35 * k)}, transparent)`, animationDelay: "-6s", animationPlayState: live ? "running" : "paused" }} />
         </>
       )}
       {live && t === "particles" && <Particles accent={accent} intensity={k} speed={speed} lite={lite} parallax={config.parallax} />}
