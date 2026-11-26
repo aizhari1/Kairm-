@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Not "inline": utilities reference the variables, so Global Settings can override brand colors at runtime. */
 @theme {
   --color-bg: #05060d;
   --color-surface: #0a0c18;
@@ -52,61 +51,33 @@ html[lang="ar"] body {
   }
 }
 
-/* ---- glass / pills ---- */
 .glass {
   background: color-mix(in srgb, var(--color-surface) 72%, transparent);
   border: 1px solid rgb(255 255 255 / 0.1);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
-.tn {
-  display: none;
-  gap: 0.25rem;
-  border-radius: 9999px;
-  padding: 0.35rem;
-}
-@media (min-width: 768px) {
-  .tn { display: flex; }
-}
+.tn { display: none; gap: 0.25rem; border-radius: 9999px; padding: 0.35rem; }
+@media (min-width: 768px) { .tn { display: flex; } }
 .tn a {
-  border-radius: 9999px;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  color: var(--color-muted);
-  transition: color .2s, background .2s;
+  border-radius: 9999px; padding: 0.45rem 0.9rem; font-size: 0.8rem;
+  letter-spacing: 0.04em; color: var(--color-muted); transition: color .2s, background .2s;
 }
 .tn a:hover, .tn a.act { color: #fff; background: rgb(255 255 255 / 0.08); }
 .bn {
-  position: fixed;
-  inset-inline: 0.75rem;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
-  z-index: 50;
-  display: flex;
-  justify-content: space-around;
-  gap: 0.25rem;
-  border-radius: 9999px;
-  padding: 0.4rem 0.5rem;
+  position: fixed; inset-inline: 0.75rem; bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+  z-index: 50; display: flex; justify-content: space-around; gap: 0.25rem;
+  border-radius: 9999px; padding: 0.4rem 0.5rem;
 }
-@media (min-width: 768px) {
-  .bn { display: none; }
-}
+@media (min-width: 768px) { .bn { display: none; } }
 .bn a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  flex: 1;
-  border-radius: 9999px;
-  padding: 0.35rem 0.25rem;
-  font-size: 0.65rem;
-  color: var(--color-muted);
+  display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+  flex: 1; border-radius: 9999px; padding: 0.35rem 0.25rem; font-size: 0.65rem; color: var(--color-muted);
 }
 .bn a.act, .bn a:hover { color: var(--color-brand); }
 .has-bn { padding-bottom: 5rem; }
 @media (min-width: 768px) { .has-bn { padding-bottom: 0; } }
 
-/* ---- buttons ---- */
 .btn, .btnPrimary, .btnGhost {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   border-radius: 9999px; padding: 0.7rem 1.25rem; font-size: 0.9rem; font-weight: 500;
@@ -120,41 +91,54 @@ html[lang="ar"] body {
 .go { display: inline-flex; align-items: center; gap: 0.35rem; }
 html[dir="rtl"] .go svg, html[dir="rtl"] .fab svg { transform: scaleX(-1); }
 
-/* ---- world blobs ---- */
 .world-blob { position: absolute; filter: blur(60px); animation: float 14s ease-in-out infinite; }
 .world-morph { position: absolute; border-radius: 40% 60% 55% 45%; filter: blur(40px); animation: morph 16s ease-in-out infinite; }
 @keyframes float { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(4%, -6%) scale(1.08); } }
 @keyframes morph { 0%,100% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg); } 50% { border-radius: 55% 45% 40% 60%; transform: rotate(8deg); } }
 @keyframes spin-slow { to { transform: rotate(360deg); } }
 
-/* ---- orb layer ---- */
-#orb-fallback { position: fixed; inset: 0; z-index: -1; background: radial-gradient(45% 40% at 72% 35%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 70%); }
-html[dir="rtl"] #orb-fallback { background: radial-gradient(45% 40% at 28% 35%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 70%); }
-#orb-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; transition: opacity .8s ease; }
+#orb-fallback, .clapper-fallback {
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    radial-gradient(42% 38% at 70% 40%, color-mix(in srgb, var(--color-brand) 28%, transparent), transparent 70%),
+    radial-gradient(35% 30% at 25% 70%, color-mix(in srgb, var(--color-brand-light) 18%, transparent), transparent 70%);
+}
+html[dir="rtl"] #orb-fallback, html[dir="rtl"] .clapper-fallback {
+  background:
+    radial-gradient(42% 38% at 30% 40%, color-mix(in srgb, var(--color-brand) 28%, transparent), transparent 70%),
+    radial-gradient(35% 30% at 75% 70%, color-mix(in srgb, var(--color-brand-light) 18%, transparent), transparent 70%);
+}
+#orb-canvas, #clapper-bg canvas { position: fixed; inset: 0; width: 100% !important; height: 100% !important; z-index: 0; pointer-events: none; }
 
-/* ---- misc ---- */
 .vprev { opacity: 0; transition: opacity .5s; } .pc:hover .vprev { opacity: 1; }
 @media (hover: none) { .vprev { opacity: 1; } }
 dialog::backdrop { animation: fade .3s ease; } @keyframes fade { from { opacity: 0; } }
 
-/* ---- Karam: neon + editor UI ---- */
 :root {
   --font-neon: "Tilt Neon", "IBM Plex Sans Arabic", system-ui, sans-serif;
   --font-digital: "Share Tech Mono", ui-monospace, monospace;
 }
-.font-neon { font-family: var(--font-neon); }
-.digital { font-family: var(--font-digital); letter-spacing: 0.08em; }
-.neon-glow {
-  color: #eaffff;
-  text-shadow: 0 0 6px rgb(255 255 255 / 0.6), 0 0 16px var(--color-brand), 0 0 38px var(--color-brand), 0 0 70px var(--color-brand);
+.font-neon { font-family: "Share Tech Mono", var(--font-neon), monospace; }
+.digital, .digital-xl {
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-#content :is(h1, h2, h3) {
-  font-family: var(--font-neon);
+.digital-xl {
+  letter-spacing: 0.18em;
+  text-shadow: 0 0 8px rgb(0 240 255 / 0.55), 0 0 24px rgb(0 240 255 / 0.35);
+}
+#content :is(h1, h2, h3),
+.nav-brand, .brand-mark {
+  font-family: "Share Tech Mono", "Tilt Neon", ui-monospace, monospace !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-shadow: 0 0 6px rgb(255 255 255 / 0.5), 0 0 16px color-mix(in srgb, var(--color-brand) 85%, transparent), 0 0 38px color-mix(in srgb, var(--color-brand) 55%, transparent);
 }
-html[lang="en"] #content :is(h1, h2, h3) { font-weight: 400; }
+html[lang="ar"] #content :is(h1, h2, h3) { letter-spacing: 0.04em; }
 body::after {
-  content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.06;
+  content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.05;
   background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
 }
 html[data-seen] #intro { display: none; }
@@ -163,15 +147,6 @@ html[data-seen] #intro { display: none; }
   position: relative; display: grid; place-items: center; overflow: hidden; border-radius: 9999px;
   width: min(62vw, 320px); aspect-ratio: 1; border: 3px solid var(--color-brand);
   box-shadow: 0 0 30px color-mix(in srgb, var(--color-brand) 50%, transparent), inset 0 0 30px color-mix(in srgb, var(--color-brand) 25%, transparent);
-}
-.leader::before {
-  content: ""; position: absolute; inset: 0; opacity: 0.5;
-  background: linear-gradient(var(--color-brand), var(--color-brand)) 50% 0 / 1px 100% no-repeat, linear-gradient(var(--color-brand), var(--color-brand)) 0 50% / 100% 1px no-repeat;
-}
-.leader::after {
-  content: ""; position: absolute; inset: 0; border-radius: 9999px;
-  background: conic-gradient(color-mix(in srgb, var(--color-brand) 40%, transparent), transparent 28%);
-  animation: spin-slow 0.8s linear infinite;
 }
 .intro-flash { position: fixed; inset: 0; z-index: 101; pointer-events: none; background: #fff; animation: flash-out 0.4s ease-out forwards; }
 @keyframes flash-out { from { opacity: 0.9; } to { opacity: 0; } }
