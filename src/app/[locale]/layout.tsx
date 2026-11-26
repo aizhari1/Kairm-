@@ -8,6 +8,9 @@ import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp";
 import { OrbLoader } from "@/components/world/orb-loader";
+import { Intro } from "@/components/layout/intro";
+import { TimelineDock } from "@/components/layout/timeline-dock";
+import { ClapperWidget } from "@/components/layout/clapper-widget";
 import "@/lib/fonts";
 import "../globals.css";
 
@@ -22,13 +25,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const st = await getSettings();
   const seo = asObject(st["seo.defaults"]);
-  const title = bi(seo.title, locale) || "SIRAJ | سِراج";
+  const title = bi(seo.title, locale) || "KARAM | كرم";
   const description = bi(seo.description, locale) || undefined;
   const favicon = s(asObject(st["brand.favicon"]).url);
   const og = s(seo.og_image);
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-    title: { default: title, template: `%s | ${title.split("|")[0].trim() || "SIRAJ"}` },
+    title: { default: title, template: `%s | ${title.split("|")[0].trim() || "KARAM"}` },
     description,
     icons: favicon ? { icon: mediaUrl(favicon) } : undefined,
     alternates: { languages: { ar: "/ar", en: "/en" } },
@@ -42,7 +45,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const settings = await getSettings();
   const ui = t(locale);
 
-  // Brand colors from Global Settings override the CSS variables at runtime
   const c = asObject(settings["brand.colors"]);
   const hex = (v: unknown) => (/^#[0-9a-f]{6}$/i.test(s(v)) ? s(v) : undefined);
   const theme: Record<string, string> = {};
@@ -54,15 +56,23 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   if (hex(c.muted)) theme["--color-muted"] = hex(c.muted)!;
 
   return (
-    <html lang={locale} dir={dirOf(locale)} style={theme as React.CSSProperties}>
+    <html lang={locale} dir={dirOf(locale)} style={theme as React.CSSProperties} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{if(sessionStorage.getItem("karam-intro"))document.documentElement.dataset.seen="1"}catch(e){}` }} />
+        <noscript><style>{`#intro{display:none}`}</style></noscript>
+      </head>
       <body>
+        <Intro />
         <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2">{ui.skipToContent}</a>
         <OrbLoader />
         <Nav locale={locale} logo={s(asObject(settings["brand.logo"]).url)}
           labels={{ home: ui.home, about: ui.about, services: ui.services, portfolio: ui.portfolio, contact: ui.contact, menu: ui.menu, close: ui.close, language: ui.language }} />
         <main id="content" className="min-h-dvh">{children}</main>
         <Footer locale={locale} settings={settings} />
+        <div className="h-12" aria-hidden />
         <WhatsAppButton locale={locale} settings={settings} />
+        <TimelineDock />
+        <ClapperWidget />
       </body>
     </html>
   );
