@@ -7,3 +7,6 @@ import "@fontsource/ibm-plex-sans-arabic/latin-400.css";
 import "@fontsource/ibm-plex-sans-arabic/latin-600.css";
 import "@fontsource/tilt-neon/latin-400.css";
 import "@fontsource/share-tech-mono/latin-400.css";
+import "@fontsource/space-grotesk/400.css";
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/700.css";
