@@ -21,7 +21,6 @@ async function nextOrder(supabase: Awaited<ReturnType<typeof requireAdmin>>["sup
   return (data?.display_order ?? 0) + 10;
 }
 
-/** New sections start as an unpublished draft, so nothing half-finished reaches visitors. */
 async function insertDraftSection(
   ctx: Awaited<ReturnType<typeof requireAdmin>>, type: SectionType, title: string, order: number,
   content?: Record<string, unknown>, settings?: Record<string, unknown>,
@@ -54,12 +53,14 @@ const STARTER: { type: SectionType; title: string }[] = [
   { type: "process_timeline", title: "Work Process" },
   { type: "custom_content", title: "Industries" },
   { type: "testimonials", title: "Testimonials" },
-  { type: "cta", title: "Call to action" },
+  { type: "cta", title: "Final CTA" },
 ];
 
 export async function createStarterLayout() {
   const ctx = await requireAdmin();
-  let order = await nextOrder(ctx.supabase);
+  const { count } = await ctx.supabase.from("sections").select("id", { count: "exact", head: true });
+  if ((count ?? 0) > 0) return;
+  let order = 10;
   for (const s of STARTER) { await insertDraftSection(ctx, s.type, s.title, order); order += 10; }
   refresh();
   redirect("/admin/sections");
@@ -71,7 +72,7 @@ export async function reorderSections(ids: string[]) {
   refresh();
 }
 
-export async function setEnabled(id: string, enabled: boolean) {
+export async function toggleSection(id: string, enabled: boolean) {
   const { supabase } = await requireAdmin();
   await supabase.from("sections").update({ is_enabled: enabled }).eq("id", id);
   refresh();
@@ -83,11 +84,14 @@ export async function duplicateSection(id: string) {
   if (!src) return;
   const type = String(src.section_type);
   if (!isType(type)) return;
-  const { data: draft } = await ctx.supabase.from("section_drafts").select("content,settings,title").eq("section_id", id).maybeSingle();
-  const content = (draft?.content ?? src.content) as Record<string, unknown>;
-  const settings = (draft?.settings ?? src.settings) as Record<string, unknown>;
-  const newId = await insertDraftSection(ctx, type, `${src.title || SECTION_CATALOG[type].label} (copy)`,
-    await nextOrder(ctx.supabase), content, settings);
+  const { data: draft } = await ctx.supabase.from("section_drafts").select("*").eq("section_id", id).maybeSingle();
+  const useDraft = draft ?? src;
+  const newId = await insertDraftSection(
+    ctx, type, `${src.title || SECTION_CATALOG[type].label} (copy)`,
+    await nextOrder(ctx.supabase),
+    (useDraft.content as Record<string, unknown>) ?? undefined,
+    (useDraft.settings as Record<string, unknown>) ?? undefined,
+  );
   refresh();
   redirect(`/admin/sections/${newId}`);
 }
