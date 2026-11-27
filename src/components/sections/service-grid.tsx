@@ -1,21 +1,53 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Box, Clapperboard, Code2, Cpu, Globe, Layers, Megaphone, Palette, PenTool, Smartphone, Sparkles, TrendingUp, type LucideIcon } from "lucide-react";
+import {
+  ArrowUpRight,
+  Aperture,
+  Clapperboard,
+  Film,
+  Mic2,
+  Palette,
+  Scissors,
+  Sparkles,
+  Video,
+  type LucideIcon,
+} from "lucide-react";
 
-const ICONS: Record<string, LucideIcon> = { code: Code2, cpu: Cpu, smartphone: Smartphone, globe: Globe, megaphone: Megaphone, "trending-up": TrendingUp, clapperboard: Clapperboard, sparkles: Sparkles, palette: Palette, "pen-tool": PenTool, layers: Layers, box: Box };
-/** Which 3D shape the orb morphs into for each icon family: 0 cube, 1 cone, 2 knot, 3 octahedron, 4 torus */
-const SHAPE: Record<string, number> = { code: 0, cpu: 0, smartphone: 0, globe: 0, megaphone: 1, "trending-up": 1, clapperboard: 2, sparkles: 2, palette: 3, "pen-tool": 3, layers: 3, box: 4 };
+const ICONS: Record<string, LucideIcon> = {
+  clapperboard: Clapperboard,
+  film: Film,
+  video: Video,
+  scissors: Scissors,
+  mic: Mic2,
+  palette: Palette,
+  aperture: Aperture,
+  sparkles: Sparkles,
+};
+
+const SHAPE: Record<string, number> = {
+  clapperboard: 2,
+  film: 2,
+  video: 0,
+  scissors: 1,
+  mic: 1,
+  palette: 3,
+  aperture: 4,
+  sparkles: 3,
+};
 
 export type ServiceItem = { id: string; href: string; title: string; description: string; icon: string; cta: string };
 
-/** Tonal expressive cards. Hovering (or scrolling a card to the middle of the screen) morphs the card and the 3D orb. */
+/** Tonal expressive cards. Hover / center-scroll morphs shape + icon. */
 export function ServiceGrid({ items }: { items: ServiceItem[] }) {
   const [active, setActive] = useState<number | null>(null);
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.k)); }), { rootMargin: "-45% 0px -45% 0px" });
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => { if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.k)); }),
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
     refs.current.forEach((el) => el && io.observe(el));
     return () => io.disconnect();
   }, [items]);
@@ -32,14 +64,23 @@ export function ServiceGrid({ items }: { items: ServiceItem[] }) {
         const Icon = ICONS[it.icon] ?? Sparkles;
         return (
           <li key={it.id} data-reveal>
-            <Link href={it.href} ref={(el) => { refs.current[i] = el; }} data-k={i} onPointerEnter={() => setActive(i)}
-              className={`svc t${i % 5} h-full ${active === i ? "on" : ""}`}>
-              <span className={`ck c${i % 5}`}><Icon className="size-7" aria-hidden strokeWidth={1.8} /></span>
+            <Link
+              href={it.href}
+              ref={(el) => { refs.current[i] = el; }}
+              data-k={i}
+              onPointerEnter={() => setActive(i)}
+              className={`svc t${i % 5} h-full ${active === i ? "on" : ""}`}
+            >
+              <span className={`ck c${i % 5}`}>
+                <Icon className="size-7" aria-hidden strokeWidth={1.75} />
+              </span>
               <span className="relative block">
                 <span className="block text-[26px] font-bold leading-tight">{it.title}</span>
                 <span className="mt-2 block max-w-[30ch] text-[15px] text-white/80">{it.description}</span>
               </span>
-              <span className="go" aria-label={it.cta}><ArrowUpRight className="size-5" aria-hidden /></span>
+              <span className="go" aria-label={it.cta}>
+                <ArrowUpRight className="size-5" aria-hidden />
+              </span>
             </Link>
           </li>
         );
