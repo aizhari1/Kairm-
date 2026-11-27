@@ -1,42 +1,35 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
-const FPS = 24, TOTAL = 180; // timecode runs 3 minutes across the page
 const pad = (n: number) => String(n).padStart(2, "0");
-const fmt = (s: number) => `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(Math.floor(s % 60))}:${pad(Math.floor((s % 1) * FPS))}`;
-const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - innerHeight);
 
-/** Editor-style timeline pinned to the bottom: the playhead follows scroll, and dragging it scrubs the page. */
+/** Film-style timeline dock that tracks scroll position like a scrubber. */
 export function TimelineDock() {
-  const head = useRef<HTMLSpanElement>(null);
-  const code = useRef<HTMLSpanElement>(null);
-  const bar = useRef<HTMLDivElement>(null);
+  const [pct, setPct] = useState(0);
+  const [tc, setTc] = useState("00:00:00:00");
 
   useEffect(() => {
-    const update = () => {
-      const p = Math.min(1, scrollY / maxScroll());
-      if (head.current) head.current.style.left = `${p * 100}%`;
-      if (code.current) code.current.textContent = fmt(p * TOTAL);
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? window.scrollY / max : 0;
+      setPct(Math.min(1, Math.max(0, p)));
+      const total = 90;
+      const s = p * total;
+      setTc(`00:${pad(Math.floor(s / 60))}:${pad(Math.floor(s % 60))}:${pad(Math.floor((s % 1) * 24))}`);
     };
-    update();
-    addEventListener("scroll", update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(document.body);
-    return () => { removeEventListener("scroll", update); ro.disconnect(); };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const seek = (e: React.PointerEvent) => {
-    const r = bar.current!.getBoundingClientRect();
-    scrollTo(0, Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * maxScroll());
-  };
-
   return (
-    <div aria-hidden className="fixed inset-x-0 bottom-0 z-30 flex h-12 items-center gap-4 border-t border-brand/30 bg-bg/90 px-4 pe-20 backdrop-blur">
-      <span ref={code} className="digital w-[11ch] text-brand">00:00:00:00</span>
-      <div ref={bar} className="dock-bar relative h-7 flex-1 cursor-ew-resize touch-none"
-        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); seek(e); }}
-        onPointerMove={(e) => { if (e.buttons === 1) seek(e); }}>
-        <span ref={head} className="dock-head absolute inset-y-0 w-0.5 bg-brand-light" />
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 hidden md:block" aria-hidden>
+      <div className="mx-auto flex max-w-5xl items-end gap-3 px-6 pb-3">
+        <span className="digital text-[10px] text-brand">{tc}</span>
+        <div className="dock-bar relative h-2 flex-1 rounded-full bg-white/10">
+          <div className="dock-head absolute top-1/2 size-3 -translate-y-1/2 rounded-sm bg-brand-light" style={{ left: `calc(${pct * 100}% - 6px)` }} />
+        </div>
+        <span className="digital text-[10px] text-muted">01:30:00:00</span>
       </div>
     </div>
   );
