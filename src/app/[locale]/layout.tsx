@@ -7,7 +7,7 @@ import { mediaUrl } from "@/lib/media";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp";
-import { ClapperLoader } from "@/components/world/clapper-loader";
+import { OrbLoader } from "@/components/world/orb-loader";
 import { Intro } from "@/components/layout/intro";
 import { TimelineDock } from "@/components/layout/timeline-dock";
 import { ClapperWidget } from "@/components/layout/clapper-widget";
@@ -64,7 +64,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <body>
         <Intro />
         <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2">{ui.skipToContent}</a>
-        <ClapperLoader />
+        <OrbLoader />
         <Nav locale={locale} logo={s(asObject(settings["brand.logo"]).url)}
           labels={{ home: ui.home, about: ui.about, services: ui.services, portfolio: ui.portfolio, contact: ui.contact, menu: ui.menu, close: ui.close, language: ui.language }} />
         <main id="content" className="min-h-dvh">{children}</main>
