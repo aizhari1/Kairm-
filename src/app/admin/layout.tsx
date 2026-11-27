@@ -5,7 +5,7 @@ export const metadata = { title: "KARAM Admin", robots: { index: false, follow: 
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className="min-h-dvh bg-bg text-white antialiased">{children}</body>
     </html>
   );
