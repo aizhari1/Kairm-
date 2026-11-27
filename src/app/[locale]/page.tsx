@@ -3,6 +3,7 @@ import { isLocale } from "@/lib/i18n/config";
 import { t } from "@/lib/i18n/ui";
 import { getProjects, getSections, getServices, getTestimonials } from "@/lib/data";
 import { RenderSection } from "@/components/sections/render";
+import { EditorHero } from "@/components/sections/editor-hero";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -17,11 +18,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     types.has("testimonials") ? getTestimonials() : { data: [], error: false },
   ]);
 
-  if (sections.error) return <div className="grid min-h-[70svh] place-items-center px-5 pt-16 text-center text-muted"><p role="alert">{ui.error}</p></div>;
-  if (sections.data.length === 0) return <div className="grid min-h-[70svh] place-items-center px-5 pt-16 text-center text-muted"><p>{ui.empty}</p></div>;
-
   return (
     <div className="pt-16">
+      <EditorHero locale={locale} />
+      {sections.error && <p role="alert" className="px-5 py-10 text-center text-muted">{ui.error}</p>}
       {sections.data.map((section) => (
         <RenderSection key={section.id} section={section} locale={locale} data={{ services: services.data, projects: projects.data, testimonials: testimonials.data }} />
       ))}
