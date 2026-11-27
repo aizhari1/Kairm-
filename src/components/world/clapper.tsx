@@ -66,7 +66,6 @@ function Slab({ size, map, edge, position }: { size: [number, number, number]; m
   );
 }
 
-/** Neon 3D clapperboard. Claps on its own every few seconds when `auto`, and whenever `clapKey` changes. */
 export function ClapperBoard({ accent, second, auto, clapKey = 0, scale = 1, position = [0, 0, 0] }:
   { accent: string; second: string; auto?: boolean; clapKey?: number; scale?: number; position?: [number, number, number] }) {
   const clock = useThree((s) => s.clock);
@@ -105,11 +104,25 @@ export function ClapperBoard({ accent, second, auto, clapKey = 0, scale = 1, pos
   );
 }
 
-export default function ClapperCanvas({ accent, second = "#FF2BD6", auto, clapKey }: { accent: string; second?: string; auto?: boolean; clapKey?: number }) {
+export default function ClapperCanvas({
+  accent,
+  second = "#FF2BD6",
+  auto,
+  clapKey,
+  scale = 0.75,
+  cameraZ = 7.5,
+}: {
+  accent: string;
+  second?: string;
+  auto?: boolean;
+  clapKey?: number;
+  scale?: number;
+  cameraZ?: number;
+}) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.5], fov: 45 }} gl={{ alpha: true, antialias: true }} style={{ position: "absolute", inset: 0 }}>
+    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, cameraZ], fov: 45 }} gl={{ alpha: true, antialias: true }} style={{ position: "absolute", inset: 0 }}>
       <ambientLight intensity={0.8} />
-      <ClapperBoard accent={accent} second={second} auto={auto} clapKey={clapKey} scale={0.75} position={[0, -0.5, 0]} />
+      <ClapperBoard accent={accent} second={second} auto={auto} clapKey={clapKey} scale={scale} position={[0, -0.5, 0]} />
     </Canvas>
   );
 }

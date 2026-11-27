@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const ClapperCanvas = dynamic(() => import("./clapper"), { ssr: false });
 
-/** Full-viewport neon clapperboard background (replaces the old orb). */
+/** Optional full-viewport clapper background (not wired by default; OrbLoader is used in layout). */
 export function ClapperLoader() {
   const [on, setOn] = useState(false);
   useEffect(() => {
@@ -21,7 +21,7 @@ export function ClapperLoader() {
     <>
       <div id="orb-fallback" aria-hidden className="clapper-fallback" />
       <div id="clapper-bg" aria-hidden className="pointer-events-none fixed inset-0 z-0 opacity-70">
-        {on && <ClapperCanvas accent="#00F0FF" second="#FF2BD6" auto scale={1.05} cameraZ={8.5} />}
+        {on && <ClapperCanvas accent="#00F0FF" second="#FF2BD6" auto />}
       </div>
     </>
   );
